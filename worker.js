@@ -1,4 +1,4 @@
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 
 export default {
   async fetch(request) {
@@ -30,14 +30,24 @@ export default {
         const img = $(el).find("img").attr("src");
 
         if (title && url) {
-          results.push({ title, url, thumbnail: img || null });
+          results.push({
+            title,
+            url,
+            thumbnail: img || null
+          });
         }
       });
 
-      return Response.json({ status: true, query: q, results }, { headers });
+      return Response.json(
+        { status: true, query: q, results },
+        { headers }
+      );
 
     } catch (err) {
-      return Response.json({ status: false, error: err.message }, { headers });
+      return Response.json(
+        { status: false, error: err.message },
+        { headers }
+      );
     }
   }
 };

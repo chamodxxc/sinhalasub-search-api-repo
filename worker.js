@@ -24,10 +24,11 @@ export default {
       const $ = cheerio.load(html);
       const results = [];
 
-      $(".post-item, article").each((i, el) => {
-        const title = $(el).find("h2 a, h3 a, .entry-title a").text().trim();
-        const url = $(el).find("a").attr("href");
-        const img = $(el).find("img").attr("src");
+      // FIXED SELECTORS
+      $(".result-item").each((i, el) => {
+        const title = $(el).find(".details h3 a").text().trim();
+        const url = $(el).find(".details h3 a").attr("href");
+        const img = $(el).find(".image img").attr("src");
 
         if (title && url) {
           results.push({

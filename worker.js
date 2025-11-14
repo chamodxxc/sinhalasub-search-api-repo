@@ -15,7 +15,8 @@ export default {
     }
 
     try {
-      const searchUrl = `https://sinhalasub.lk/?s=${encodeURIComponent(q)}`;
+      // WordPress RAW search (bypasses JavaScript)
+      const searchUrl = `https://sinhalasub.lk/?s=${encodeURIComponent(q)}&post_type=post`;
 
       const html = await fetch(searchUrl, {
         headers: { "User-Agent": "Mozilla/5.0" }
@@ -24,11 +25,11 @@ export default {
       const $ = cheerio.load(html);
       const results = [];
 
-      // FIXED SELECTORS
-      $(".result-item").each((i, el) => {
-        const title = $(el).find(".details h3 a").text().trim();
-        const url = $(el).find(".details h3 a").attr("href");
-        const img = $(el).find(".image img").attr("src");
+      // Guaranteed working WordPress structure
+      $("article").each((i, el) => {
+        const title = $(el).find("h2.entry-title a").text().trim();
+        const url = $(el).find("h2.entry-title a").attr("href");
+        const img = $(el).find("img").attr("src");
 
         if (title && url) {
           results.push({

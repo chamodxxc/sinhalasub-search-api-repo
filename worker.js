@@ -15,8 +15,7 @@ export default {
     }
 
     try {
-      // WordPress RAW search (bypasses JavaScript)
-      const searchUrl = `https://sinhalasub.lk/?s=${encodeURIComponent(q)}&post_type=post`;
+      const searchUrl = `https://sinhalasub.lk/?s=${encodeURIComponent(q)}`;
 
       const html = await fetch(searchUrl, {
         headers: { "User-Agent": "Mozilla/5.0" }
@@ -25,17 +24,24 @@ export default {
       const $ = cheerio.load(html);
       const results = [];
 
-      // Guaranteed working WordPress structure
-      $("article").each((i, el) => {
-        const title = $(el).find("h2.entry-title a").text().trim();
-        const url = $(el).find("h2.entry-title a").attr("href");
-        const img = $(el).find("img").attr("src");
+      $(".result-item").each((i, item) => {
+        const title = $(item).find(".details h3 a").text().trim();
+        const link = $(item).find(".details h3 a").attr("href");
+        const img = $(item).find(".image img").attr("src");
 
-        if (title && url) {
+        // extra fields if available
+        const year = $(item).find(".details .year").text().trim();
+        const quality = $(item).find(".details .quality").text().trim();
+        const type = $(item).find(".details .type").text().trim();
+
+        if (title && link) {
           results.push({
-            title,
-            url,
-            thumbnail: img || null
+            Title: title,
+            Img: img || null,
+            Link: link,
+            Year: year || null,
+            Quality: quality || null,
+            Type: type || null
           });
         }
       });
